@@ -29,12 +29,15 @@ class MqttSubscribe extends Command
         $mqtt = new MqttService();
 
         // Subscribe ke topik di sesuaikan!
-        $mqtt->subscribe('gateway/sensor', function ($topic, $message) use ($mqtt) {
+        $mqtt->subscribe('irez/send', function ($topic, $message) use ($mqtt) {
             
             $this->info("Pesan diterima dari $topic: $message");
-
+            if($message == "oke") {
+                $mqtt->publish('irez/reply', "Oke pesan udah ada"); // publish pesan ke broker (contoh)
+            }
+            
         });
-
+        
         $this->info('Menunggu pesan dari broker...');
         // $mqtt->loop(60); // loop selama 60 detik lalu berhenti
         // $mqtt->disconnect();
