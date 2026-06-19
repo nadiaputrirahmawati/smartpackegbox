@@ -1,0 +1,307 @@
+<?php
+
+namespace App\Console\Commands;
+
+use App\Events\MoneyDeposited;
+use Illuminate\Console\Command;
+use App\Models\Package;
+use App\Models\User;
+use App\Models\ActivityLog;
+use App\Models\DepositLog;
+use App\Models\MoneySlot;
+use App\Services\MqttService;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
+
+class MqttSubscribe extends Command
+{
+    protected $signature = 'mqtt-subscribe';
+    protected $description = 'Listen to SmartBox IoT Sensors (Box & Rotary)';
+
+    public function handle()
+    {
+        // 🛡️ OPTIMASI 1: Matikan Query Log agar RAM tidak bocor saat script berjalan berhari-hari
+        DB::connection()->disableQueryLog();
+
+        $this->info('🚀 Memulai koneksi ke Broker MQTT (Optimized Edition)...');
+        $mqtt = new MqttService();
+
+        // ==============================================================
+        // SUBSCRIBER 1: BOX REQUEST (OPTIMIZED FOR PIN USER)
+        // ==============================================================
+        $mqtt->subscribe('smartbox/box/request', function ($topic, $message) use ($mqtt) {
+            try {
+                $this->pingDatabase();
+
+                $data = json_decode($message, true);
+                if (!$data || !isset($data['input_key'])) return;
+
+                $input = trim($data['input_key']);
+                $type = $data['type']; // 'scan' atau 'keypad'
+                $inputLength = strlen($input);
+
+                // 1. Buat Log Awal (Status Default: failed)
+                $log = ActivityLog::create([
+                    'input_value' => $input,
+                    'method'      => ($type == 'scan') ? ActivityLog::METHOD_SCAN : ActivityLog::METHOD_KEYPAD,
+                    'event'       => ActivityLog::EVENT_ACCESS_DENIED,
+                    'status'      => 'failed',
+                ]);
+
+                // Trigger Kamera
+                $mqtt->publish('smartbox/camera/trigger', json_encode([
+                    'log_id' => $log->id,
+                    'input_value' => $input,
+                ]));
+
+                // ==============================================================
+                // RUTE KHUSUS 1: JIKA INPUT ADALAH KEYPAD DAN PANJANGNYA >= 5 DIGIT (PASTI PIN USER)
+                // ==============================================================
+                if ($type == 'keypad' && $inputLength >= 5) {
+                    $user = User::where('pin', $input)->first();
+                    
+                    if ($user) {
+                        $mqtt->publish('smartbox/box/command', $user->letter_box . "_USER");
+                        $mqtt->publish('smartbox/lcd/update', 'PIN Benar, Terbuka');
+
+                        $log->update([
+                            'user_id'    => $user->id,
+                            'status'     => 'success',
+                            'actor_type' => ActivityLog::ACTOR_USER,
+                            'event'      => ActivityLog::EVENT_DOOR_OPENED 
+                        ]);
+                    } else {
+                        $mqtt->publish('smartbox/lcd/update', 'PIN Salah / Gagal');
+                        $mqtt->publish('smartbox/box/command', 'STANDBY'); 
+                    }
+                    return; // Selesai, jangan lanjut ke pengecekan paket
+                }
+
+                // ==============================================================
+                // RUTE KHUSUS 2: CEK SEBAGAI PAKET (SCAN RESI ATAU KEYPAD KODE 4 DIGIT)
+                // ==============================================================
+                $paket = null;
+                if ($type == 'scan') {
+                    $paket = Package::with(['user', 'slot'])->where('tracking_number', $input)->first();
+                } elseif ($type == 'keypad' && $inputLength == 4) {
+                    $paket = Package::with(['user', 'slot'])->whereRaw("RIGHT(tracking_number, 4) = ?", [$input])->first();
+                }
+
+                // Jalankan logika jika paket ditemukan
+                if ($paket) {
+                    if ($paket->package_status === 'arrived') {
+                        $mqtt->publish('smartbox/lcd/update', 'Paket Selesai');
+                        $mqtt->publish('smartbox/box/command', 'STANDBY');
+                        return;
+                    }
+
+                    if ($paket->user && $paket->package_status === 'waiting') {
+                        // --- LOGIKA PREPAID vs COD ---
+                        if ($paket->payment_type === 'prepaid') {
+                            $mqtt->publish('smartbox/lcd/update', 'Masukan paket ke slot ' . $paket->user->letter_box);
+                        } elseif ($paket->payment_type === 'cod') {
+                            if ($paket->payment_status !== 'deposited') {
+                                $mqtt->publish('smartbox/lcd/update', 'Uang Belum Tersedia Hubungi Pemilik');
+                                $mqtt->publish('smartbox/box/command', 'STANDBY');
+
+                                $log->update([
+                                    'package_id' => $paket->id,
+                                    'status'     => 'failed',
+                                    'event'      => 'payment_not_ready',
+                                ]);
+                                return;
+                            }
+
+                            $mqtt->publish('smartbox/lcd/update', 'Masukan paket & ambil uang di kotak atas');
+                            $slotNum = $paket->slot->slot_number;
+
+                            $mqtt->publish('smartbox/rotary/command', json_encode([
+                                'action' => 'open_slot_courier',
+                                'package_id' => $paket->id,
+                                'slot_number' => $slotNum
+                            ]));
+                        }
+
+                        // --- BUKA PINTU PAKET ---
+                        $mqtt->publish('smartbox/box/command', json_encode([
+                            'tracking_number' => $paket->tracking_number,
+                            'action' => $paket->user->letter_box . "_KURIR"
+                        ]));
+
+                        $log->update([
+                            'package_id' => $paket->id,
+                            'status'     => 'success',
+                            'actor_type' => 'courier', 
+                            'event'      => 'door_opened' 
+                        ]);
+                        return;
+                    }
+                } 
+                
+                // JIKA HINGGA TITIK INI TIDAK MASUK KONDISI MANAPUN (Resi salah / Keypad di bawah 5 digit tapi bukan resi)
+                $mqtt->publish('smartbox/lcd/update', 'Data Tidak Valid');
+                $mqtt->publish('smartbox/box/command', 'STANDBY');
+                
+            } catch (\Exception $e) {
+                Log::error("MQTT Error: " . $e->getMessage());
+            }
+        });
+
+        // ==============================================================
+        // SUBSCRIBER 2: DOOR STATUS
+        // ==============================================================
+        $mqtt->subscribe('smartbox/box/door/status', function ($topic, $message) {
+            try {
+                // 🛡️ OPTIMASI 2: Segarkan koneksi DB
+                $this->pingDatabase();
+
+                $data = json_decode($message, true);
+                if (isset($data['box']) && isset($data['door']) && $data['door'] === 'rear') {
+                    $user = \App\Models\User::where('letter_box', $data['box'])->first();
+                    if ($user) {
+                        broadcast(new \App\Events\RearDoorStatusUpdated($user->id, $data['status']));
+                        $this->info("Status pintu belakang {$data['box']} menjadi: {$data['status']}");
+                    }
+                }
+            } catch (\Exception $e) {
+                Log::error("MQTT Box Status Error: " . $e->getMessage());
+            }
+        });
+
+        // =========================================================
+        // SUBSCRIBER 3: VERIFY PAKET (LOADCELL)
+        // =========================================================
+        $mqtt->subscribe('smartbox/box/verify', function ($topic, $message) use ($mqtt) {
+            try {
+                // 🛡️ OPTIMASI 2: Segarkan koneksi DB
+                $this->pingDatabase();
+
+                $data = json_decode($message, true);
+                if (!isset($data['tracking_number'], $data['box'])) return;
+
+                $trackingNumber = $data['tracking_number'];
+                $box = $data['box'];
+
+                DB::transaction(function () use ($trackingNumber, $box, $mqtt) {
+                    $package = Package::where('tracking_number', $trackingNumber)->first();
+
+                    if ($package) {
+                        $package->update([
+                            'package_status' => 'arrived',
+                            'arrived_at'     => now()
+                        ]);
+
+                        $log = ActivityLog::create([
+                            'package_id'  => $package->id,
+                            'user_id'     => $package->user_id,
+                            'input_value' => $trackingNumber,
+                            'method'      => ActivityLog::METHOD_SCAN, 
+                            'event'       => ActivityLog::EVENT_PACKAGE_ARRIVED,
+                            'status'      => 'success',
+                            'actor_type'  => ActivityLog::ACTOR_COURIER,
+                        ]);
+
+                        if ($package->payment_type === 'cod') {
+                            $mqtt->publish('smartbox/rotary/command', json_encode([
+                                'action' => 'close_slot'
+                            ]));
+                            Log::info("🔒 Uang COD telah diambil. Perintah 'close_slot' dikirim ke Node B.");
+                            if ($package->slot) {
+                                MoneySlot::where('id', $package->slot->id)->update(['status' => 'empty']);
+                                Log::info("💵 Slot uang ID: {$package->slot->id} telah dikosongkan.");
+                            }
+                        }
+
+                        $mqtt->publish('smartbox/camera/trigger', json_encode([
+                            'log_id' => $log->id,
+                            'input_value' => $trackingNumber,
+                        ]));
+
+                        $mqtt->publish('smartbox/lcd/update', 'Paket Diterima, Terima Kasih!');
+                        Log::info("📦 Paket $trackingNumber terverifikasi sensor LOADCELL di Kotak $box");
+                    }
+                });
+            } catch (\Exception $e) {
+                Log::error("Gagal Verifikasi LOADCELL: " . $e->getMessage());
+            }
+        });
+
+        // ==============================================================
+        // SUBSCRIBER 4: ROTARY SENSOR
+        // ==============================================================
+        $mqtt->subscribe('smartbox/rotary/sensor', function ($topic, $message) {
+            try {
+                // 🛡️ OPTIMASI 2: Segarkan koneksi DB
+                $this->pingDatabase();
+
+                $data = json_decode($message, true);
+                if (!$data || !isset($data['action'])) return;
+
+                $packageId = $data['package_id'];
+                $package = Package::find($packageId);
+                if (!$package) return;
+
+                if ($data['action'] === 'money_pending_confirmation') {
+                    $sessionExpiry = \Illuminate\Support\Facades\Cache::get("package_session_{$package->id}");
+                    if (!$sessionExpiry || \Carbon\Carbon::now()->greaterThan(\Carbon\Carbon::parse($sessionExpiry))) {
+                        $this->error("Uang ditolak! Sesi sudah habis.");
+                        return;
+                    }
+
+                    $nominal = $data['nominal'];
+                    $colorSignature = $data['color_signature'] ?? 'Unknown';
+
+                    $event = new \App\Events\MoneyPendingConfirmation($package, $nominal, $colorSignature);
+                    broadcast($event);
+                    
+                    $this->info("Menunggu konfirmasi web untuk Rp {$nominal}");
+                }
+                else if ($data['action'] === 'unrecognized_money') {
+                    $event = new \App\Events\MoneyUnrecognized($package);
+                    broadcast($event);
+                    $this->error("Peringatan: Uang gagal dikenali di Rotary Box.");
+                }
+                else if ($data['action'] === 'position_reached') {
+                    $this->info("Rotary siap di Slot {$data['slot_number']} untuk paket ID: {$package->id}");
+                }
+
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error("MQTT Rotary Sensor Error: " . $e->getMessage());
+            }
+        });
+
+        // ==============================================================
+        // LOOP DAEMON (EFISIENSI CPU)
+        // ==============================================================
+        $this->info('📡 Menunggu pesan dari broker...');
+
+        while (true) {
+            try {
+                $mqtt->loop();
+                
+                // 🛡️ OPTIMASI 3: Penahan CPU. Tanpa ini, CPU usage bisa menembus 100%.
+                // usleep(50000) = 50ms. Tidak akan menyebabkan message drop.
+                usleep(50000); 
+
+            } catch (\Exception $e) {
+                $this->error("⚠️ MQTT Loop Error: " . $e->getMessage());
+                sleep(2); // Ubah jadi 2 detik saja agar lebih cepat recover
+            }
+        }
+    }
+
+    // ==============================================================
+    // 🛡️ HELPER FUNCTION: AUTO-RECONNECT DATABASE
+    // ==============================================================
+    private function pingDatabase()
+    {
+        try {
+            DB::connection()->getPdo();
+        } catch (\Exception $e) {
+            $this->warn("🔄 Koneksi Database Terputus. Melakukan Reconnect...");
+            DB::purge('mysql'); 
+            DB::reconnect('mysql');
+            DB::connection()->disableQueryLog(); // Pastikan koneksi baru juga mematikan log
+        }
+    }
+}

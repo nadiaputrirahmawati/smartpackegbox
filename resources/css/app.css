@@ -4,8 +4,45 @@
 @source '../../storage/framework/views/*.php';
 @source '../**/*.blade.php';
 @source '../**/*.js';
+@source '../**/*.vue'; /* Tambahan penting jika Anda menggunakan Vue.js */
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    /* 1. Konfigurasi Font Default & Custom */
+    --font-sans: 'Manrope', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-headline: 'Manrope', sans-serif;
+    --font-body: 'Material', sans-serif;
+    --font-label: 'Manrope', sans-serif;
+
+    /* 2. Konfigurasi Palet Warna Kustom (Sovereign Core Theme) */
+    --color-primary: #111840;
+    --color-primary-100: #272D56;
+    --color-primary-200: #3D446E;
+    --color-secondary: #001D35;
+    --color-secondary-100: #24496C;
+    --color-secondary-200: #577A9F;
+    --color-secondary-300: #8BAED6;
+    --color-secondary-400: #A7CAF3;
+    --color-secondary-500: #D0E4FF;
+    --color-secondary-600: #E9F1FF;
+    --color-tertiary: #5B88CA;
+    --color-tertiary-100: #00315D;
+    --color-tertiary-200: #4B79B4;
+    --color-tertiary-300: #6693CF;
+    --color-tertiary-400: #81ADEC;
+    --color-tertiary-500: #A4C9FF;
+    --color-tertiary-600: #D4E3FF;
+    --color-tertiary-700: #e8f2ff;
+    --color-tertiary-800: #f7f9ff;
+    --color-neutral: #E0E3E5;
+    --color-neutral-100: #C4C7C9;
+    --color-neutral-200: #EFF1F3;
+    --color-neutral-300: #FFFFFF;
+    --color-danger: #93000A;
+    --coloe-green: #d1fae5;
+    --coloe-green: #19844a;
+
+
+    /* 3. Konfigurasi Radius (Opsional, dari desain sebelumnya) */
+    /* --radius-lg: 2rem;
+    --radius-xl: 3rem; */
 }
