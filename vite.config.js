@@ -15,15 +15,15 @@ export default defineConfig({
         vue(),
         tailwindcss(),
         VitePWA({
-            outDir: "public",
-            buildBase: "/", 
+            outDir: "public/build",
+            buildBase: "/build/",
             scope: "/",
             registerType: "autoUpdate",
             injectRegister: false, // Kita biarkan tetap false karena kita panggil manual di app.js sesuai urutan login
             workbox: {
                 // KUNCI AMAN 1: Hanya cache file JS & CSS hasil build di folder assets, manifest tidak akan disentuh!
                 globPatterns: [
-                    "assets/*.{js,css}",
+                    "assets/*.{js,css,png,svg,jpg,mp3,mp4}",
                 ],
                 navigateFallback: null,
                 cleanupOutdatedCaches: true,

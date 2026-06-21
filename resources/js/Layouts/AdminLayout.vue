@@ -523,6 +523,13 @@ const closeLogoutModal = () => {
 
 const executeLogout = () => {
     isLoggingOut.value = true;
+    if (window.PusherPushNotifications) {
+        const beamsClient = new PusherPushNotifications.Client({ instanceId: 'e49f734a-45b3-454e-baf4-a83f348027f8' });
+        beamsClient.clearDeviceInterests()
+            .then(() => beamsClient.stop())
+            .then(() => console.log("[Pusher] Logout Beams sukses."))
+            .catch(e => console.error(e));
+    }
     router.post(
         "/logout",
         {},

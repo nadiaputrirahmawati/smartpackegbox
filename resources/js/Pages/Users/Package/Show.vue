@@ -7,7 +7,7 @@
                 <div
                     class="flex items-center gap-2 text-sm font-bold text-gray-500 mb-2"
                 >
-                    <Link
+                    <Link 
                         href="/user/packages"
                         class="hover:text-primary transition-colors"
                         >Daftar Paket</Link
@@ -467,9 +467,6 @@ import {
     Package as PackageIcon,
 } from "@lucide/vue";
 
-// Import suara
-import cashSound from "@/assets/sounds/cash.mp3";
-
 const props = defineProps({
     package: { type: Object, required: true },
 });
@@ -486,7 +483,7 @@ let sessionInterval = null;
 let isWarningModalOpen = false; // Mencegah modal muncul berulang kali
 
 // --- Audio Controller ---
-const audio = new Audio(cashSound);
+const audio = new Audio("/sounds/cash.mp3");
 
 const playCashSound = () => {
     audio.currentTime = 0;
