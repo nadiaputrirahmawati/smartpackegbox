@@ -1,82 +1,88 @@
 <template>
     <UserLayout>
         <div
-            class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8"
+            class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8 w-full"
         >
-            <div>
+            <div class="flex-1 min-w-0">
                 <div
-                    class="flex items-center gap-2 text-sm font-bold text-gray-500 mb-2"
+                    class="flex items-center gap-2 text-sm font-bold text-gray-500 mb-2 flex-wrap"
                 >
-                    <Link 
+                    <Link
                         href="/user/packages"
-                        class="hover:text-primary transition-colors"
-                        >Daftar Paket</Link
+                        class="hover:text-primary transition-colors whitespace-nowrap"
                     >
-                    <ChevronRight class="w-4 h-4" />
-                    <span class="text-primary">{{
-                        package.tracking_number
-                    }}</span>
+                        Daftar Paket
+                    </Link>
+                    <ChevronRight class="w-4 h-4 text-gray-400 shrink-0" />
+                    <span
+                        class="text-primary truncate max-w-[200px] sm:max-w-none"
+                    >
+                        {{ package.tracking_number }}
+                    </span>
                 </div>
                 <h1
-                    class="text-3xl md:text-4xl font-extrabold text-primary tracking-tight"
+                    class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-primary tracking-tight truncate"
                 >
                     Detail Paket
                 </h1>
             </div>
 
-            <div class="flex items-center gap-4">
-                <div>
+            <div
+                class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full md:w-auto shrink-0"
+            >
+                <div class="w-full sm:w-auto">
                     <button
                         @click="showGuide"
-                        class="w-full bg-secondary-100 hover:bg-secondary-200 border border-blue-500/30 text-white py-3 rounded-2xl font-bold text-sm transition-all flex justify-center items-center p-4 gap-2 relative z-10"
+                        class="w-full bg-secondary-100 hover:bg-secondary-200 border border-blue-500/30 text-white py-3 px-5 rounded-2xl font-bold text-sm transition-all flex justify-center items-center gap-2 relative z-10"
                     >
-                        <Info class="w-5 h-5" />
-                        Panduan Memasukkan Uang
+                        <Info class="w-5 h-5 shrink-0" />
+                        <span class="whitespace-nowrap"
+                            >Panduan Memasukkan Uang</span
+                        >
                     </button>
                 </div>
-                <div>
+
+                <div class="w-full sm:w-auto">
                     <button
                         @click="openRotarySlot"
                         :disabled="isOpening || sisaTagihan <= 0"
-                        class="w-full bg-primary hover:bg-secondary-100 text-white p-4 rounded-2xl font-extrabold text-sm transition-all flex justify-center items-center gap-2 shadow relative z-10 disabled:opacity-50"
+                        class="w-full bg-primary hover:bg-secondary-100 text-white p-3.5 sm:p-4 rounded-2xl font-extrabold text-sm transition-all flex justify-center items-center gap-2 shadow relative z-10 disabled:opacity-50"
                     >
                         <Loader2
                             v-if="isOpening"
-                            class="w-5 h-5 animate-spin"
+                            class="w-5 h-5 animate-spin shrink-0"
                         />
-                        <Unlock v-else class="w-5 h-5" />
-                        Buka Slot Uang
-                        {{
-                            package.slot?.slot_number
-                                ? `0${package.slot.slot_number}`
-                                : ""
-                        }}
+                        <Unlock v-else class="w-5 h-5 shrink-0" />
+                        <span class="whitespace-nowrap">
+                            Buka Slot Uang
+                            {{
+                                package.slot?.slot_number
+                                    ? `0${package.slot.slot_number}`
+                                    : ""
+                            }}
+                        </span>
                     </button>
                 </div>
+
                 <div
-                    class="bg-red-100 border border-red-100 px-4 py-2.5 rounded-xl flex items-center gap-3 shadow-sm"
+                    class="w-full sm:w-auto bg-red-100 border border-red-200 px-4 py-3 rounded-2xl flex items-center justify-center sm:justify-start gap-3 shadow-sm shrink-0"
                 >
-                    <Hourglass class="w-4 h-4 text-red-500 animate-pulse" />
-                    <div>
+                    <Hourglass
+                        class="w-5 h-5 text-red-500 animate-pulse shrink-0"
+                    />
+                    <div class="text-left">
                         <p
-                            class="text-[9px] font-extrabold text-red-400 tracking-widest uppercase mb-0.5"
+                            class="text-[9px] font-extrabold text-red-400 tracking-widest uppercase mb-0.5 leading-none"
                         >
                             Sesi Aktif
                         </p>
-                        <p class="text-xs font-bold text-red-600">
+                        <p
+                            class="text-xs font-bold text-red-600 whitespace-nowrap leading-tight"
+                        >
                             Berakhir dalam {{ remainingSeconds }} detik
                         </p>
                     </div>
                 </div>
-
-                <!-- <div
-                    class="bg-white border border-secondary-600 px-4 py-3 rounded-full text-[10px] font-extrabold tracking-widest uppercase flex items-center gap-2 shadow-sm text-primary"
-                >
-                    <div
-                        class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"
-                    ></div>
-                      Pembayaran Real time
-                </div> -->
             </div>
         </div>
 
@@ -179,7 +185,7 @@
 
                 <div
                     v-if="package.payment_type === 'cod'"
-                    class="bg-[#111840] rounded-[2rem] p-8 text-white shadow-xl relative overflow-hidden"
+                    class="bg-[#111840] rounded-[2rem] hidden lg:block p-8 text-white shadow-xl relative overflow-hidden"
                 >
                     <div
                         class="flex justify-between items-start mb-6 relative z-10"
@@ -229,7 +235,7 @@
                         class="flex items-start gap-3 bg-white/5 p-4 rounded-xl border border-white/10 relative z-10"
                     >
                         <Info class="w-4 h-4 text-gray-400 shrink-0 mt-0.5" />
-                        <p class="text-[9px] text-gray-400 leading-relaxed">
+                        <p class="text-[12px] text-gray-400 leading-relaxed">
                             Menunggu perintah pembukaan slot dari operator.
                         </p>
                     </div>
@@ -276,7 +282,7 @@
                                 <p
                                     class="text-xl font-extrabold text-[#3c5f83]"
                                 >
-                                    Rp Rp
+                                    Rp 
                                     {{ formatRupiah(localDepositedAmount) }}
                                 </p>
                             </div>
@@ -433,11 +439,11 @@
                         </div>
                     </div>
 
-                    <button
+                    <!-- <button
                         class="w-full border-2 border-dashed border-secondary-600 hover:border-primary hover:bg-[#f8faff] text-secondary-200 hover:text-primary py-4 rounded-2xl font-bold text-sm transition-all flex justify-center items-center gap-2"
                     >
                         <Printer class="w-4 h-4" /> Cetak Resi Sementara
-                    </button>
+                    </button> -->
                 </div>
             </div>
         </div>
@@ -523,7 +529,6 @@ const formatCountdown = computed(() => {
     return `${m}:${s}`;
 });
 
-
 // Tambahkan fungsi ini di script setup
 const showGuide = () => {
     Swal.fire({
@@ -535,8 +540,8 @@ const showGuide = () => {
         confirmButtonText: "Saya Mengerti",
         confirmButtonColor: "#10b981",
         customClass: {
-            image: 'rounded-xl shadow-sm'
-        }
+            image: "rounded-xl shadow-sm",
+        },
     });
 };
 
@@ -697,7 +702,6 @@ const fetchSessionData = async () => {
 
 // 4. Update fungsi openRotarySlot
 const openRotarySlot = async () => {
-
     const confirmGuide = await Swal.fire({
         title: "Sebelum Membuka Kotak...",
         text: "Mohon pastikan posisi uang dan nominal sesuai panduan agar sensor tidak error.",

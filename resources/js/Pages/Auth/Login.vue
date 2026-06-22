@@ -43,15 +43,16 @@
                     <h1
                         class="text-4xl font-semibold mb-6 leading-[1.3] font-headline text-[#f7f9ff]"
                     >
-                        Keamanan <br /><span class="text-[#8ba4eb]"
-                            >Package.</span
+                        Otomatisasi <br /><span class="text-[#8ba4eb]"
+                            >Penerimaan Paket.</span
                         >
                     </h1>
                     <p
                         class="text-[#7b81af] text-[15px] leading-relaxed max-w-sm"
                     >
-                        Sovereign Core memberikan kendali penuh atas ekosistem
-                        pintar Anda dengan standar enkripsi militer.
+                         Integrasi platform web dengan perangkat keras menggunakan
+                verifikasi nomor resi. Memberikan kemudahan untuk logistik
+                kurir.
                     </p>
                 </div>
             </div>

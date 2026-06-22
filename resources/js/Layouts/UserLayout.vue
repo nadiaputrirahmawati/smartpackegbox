@@ -41,7 +41,7 @@
                                 : 'text-secondary-200 hover:bg-tertiary-800 hover:text-primary'
                         "
                     >
-                        <Package class="w-4 h-4" /> Deliveries
+                        <Package class="w-4 h-4" /> Pengiriman
                     </Link>
                     <Link
                         href="/user/history/log"
@@ -52,7 +52,7 @@
                                 : 'text-secondary-200 hover:bg-tertiary-800 hover:text-primary'
                         "
                     >
-                        <History class="w-4 h-4" /> History
+                        <History class="w-4 h-4" /> Riwayat
                     </Link>
                     <Link
                         href="/user/setting/pin"
@@ -63,18 +63,11 @@
                                 : 'text-secondary-200 hover:bg-tertiary-800 hover:text-primary'
                         "
                     >
-                        <Settings class="w-4 h-4" /> Settings
+                        <Settings class="w-4 h-4" /> Pengaturan
                     </Link>
                 </nav>
 
-                <div class="flex items-center gap-4">
-                    <button
-                        class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-secondary-200 hover:text-primary hover:bg-secondary-600 transition-colors border border-secondary-600 shadow-sm"
-                    >
-                        <Bell class="w-4 h-4" />
-                    </button>
-
-                    <div
+                <div class="flex items-center gap-4">                    <div
                         class="flex items-center gap-3 pl-4 border-l border-secondary-600 relative"
                         ref="dropdownRef"
                     >
@@ -87,7 +80,7 @@
                             >
                             <span
                                 class="text-[9px] font-extrabold text-secondary-200 tracking-widest uppercase mt-0.5"
-                                >Personal Node</span
+                                >Pengguna</span
                             >
                         </div>
                         <button
@@ -266,7 +259,7 @@
                         </div>
                         <span
                             class="absolute bottom-2 text-sm font-extrabold tracking-widest uppercase text-primary"
-                            >Home</span
+                            >Beranda</span
                         >
                     </div>
                     <div
@@ -276,7 +269,7 @@
                         <LayoutGrid class="w-5 h-5 mb-1" />
                         <span
                             class="text-[9px] font-extrabold tracking-widest uppercase"
-                            >Home</span
+                            >Beranda</span
                         >
                     </div>
                 </Link>
@@ -296,7 +289,7 @@
                         </div>
                         <span
                             class="absolute bottom-2 text-sm font-extrabold tracking-widest uppercase text-primary"
-                            >Parcels</span
+                            >Paket</span
                         >
                     </div>
                     <div
@@ -306,7 +299,7 @@
                         <Package class="w-5 h-5 mb-1" />
                         <span
                             class="text-[9px] font-extrabold tracking-widest uppercase"
-                            >Parcels</span
+                            >Paket</span
                         >
                     </div>
                 </Link>
@@ -326,7 +319,7 @@
                         </div>
                         <span
                             class="absolute bottom-2 text-sm font-extrabold tracking-widest uppercase text-primary"
-                            >History</span
+                            >Riwayat</span
                         >
                     </div>
                     <div
@@ -336,7 +329,7 @@
                         <History class="w-5 h-5 mb-1" />
                         <span
                             class="text-[9px] font-extrabold tracking-widest uppercase"
-                            >History</span
+                            >Riwayat</span
                         >
                     </div>
                 </Link>
@@ -356,7 +349,7 @@
                         </div>
                         <span
                             class="absolute bottom-2 text-[9px] font-extrabold tracking-widest uppercase text-primary"
-                            >Settings</span
+                            >Pengaturan</span
                         >
                     </div>
                     <div
@@ -366,7 +359,7 @@
                         <Settings class="w-5 h-5 mb-1" />
                         <span
                             class="text-[9px] font-extrabold tracking-widest uppercase"
-                            >Settings</span
+                            >Pengaturan</span
                         >
                     </div>
                 </Link>

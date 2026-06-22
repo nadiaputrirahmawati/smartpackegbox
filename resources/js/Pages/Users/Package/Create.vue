@@ -25,7 +25,7 @@
                     <p v-if="form.errors.tracking_number" class="text-danger text-xs mt-1">{{ form.errors.tracking_number }}</p>
                 </div>
 
-                <div class="mb-8">
+                <div class="mb-8 ">
                     <label class="block text-[10px] font-extrabold text-gray-400 tracking-widest uppercase mb-2">Metode Pembayaran</label>
                     <div class="flex gap-4">
                         <button type="button" @click="setPaymentType('prepaid')"
@@ -81,9 +81,9 @@
 
             </div>
 
-            <div class="xl:col-span-4 space-y-6">
+            <div class="xl:col-span-4 space-y-6 ">
                 
-                <div class="bg-primary rounded-3xl p-8 text-white shadow-xl relative overflow-hidden">
+                <div class="bg-primary rounded-3xl p-8 text-white shadow-xl relative overflow-hidden hidden lg:block">
                     <div class="flex justify-between items-start mb-6 relative z-10">
                         <Box class="w-6 h-6 text-tertiary-200" />
                         <span class="bg-white/10 px-3 py-1 rounded-full text-[9px] font-extrabold tracking-widest uppercase backdrop-blur-sm">

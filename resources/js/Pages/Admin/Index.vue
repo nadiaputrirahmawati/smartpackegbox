@@ -18,7 +18,7 @@ import {
     Hash,
     ScanBarcode,
     ArrowUpRight,
-    AlertTriangle
+    AlertTriangle,
 } from "@lucide/vue";
 
 const props = defineProps({
@@ -89,110 +89,207 @@ const formatEventData = (log) => {
                     </p>
                 </header>
 
-<section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10 relative">
-    
-    <div class="group relative rounded-[2rem] bg-white/60 backdrop-blur-xl border border-white/80 shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_8px_40px_rgba(59,130,246,0.12)]">
-        <div class="absolute -inset-20 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-100/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
-        <div class="absolute -right-10 -bottom-10 w-32 h-32 bg-blue-400/10 rounded-full blur-2xl group-hover:bg-blue-400/20 transition-colors duration-700 animate-pulse"></div>
+                <section
+                    class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10 relative"
+                >
+                    <div
+                        class="group relative rounded-[2rem] bg-white/60 backdrop-blur-xl border border-white/80 shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_8px_40px_rgba(59,130,246,0.12)]"
+                    >
+                        <div
+                            class="absolute -inset-20 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-100/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+                        ></div>
+                        <div
+                            class="absolute -right-10 -bottom-10 w-32 h-32 bg-blue-400/10 rounded-full blur-2xl group-hover:bg-blue-400/20 transition-colors duration-700 animate-pulse"
+                        ></div>
 
-        <div class="p-8 relative z-10 h-full flex flex-col justify-between">
-            <div class="flex justify-between items-start mb-8">
-                <div class="w-12 h-12 bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl flex items-center justify-center text-blue-600 shadow-inner border border-blue-200/50 group-hover:scale-110 transition-transform duration-500">
-                    <Archive class="w-6 h-6" />
-                </div>
-                <div class="flex flex-col items-end">
-                    <span class="text-blue-700 bg-blue-50/80 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ring-1 ring-inset ring-blue-600/20 mb-1">
-                        Hari Ini
-                    </span>
-                </div>
-            </div>
-            
-            <div>
-                <p class="text-slate-500 font-semibold text-sm mb-1 uppercase tracking-wider text-[11px]">Total Paket Masuk</p>
-                <h3 class="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-br from-slate-900 to-slate-600 tracking-tight">
-                    {{ stats.total_packages_today }}
-                </h3>
-            </div>
-        </div>
-    </div>
+                        <div
+                            class="p-8 relative z-10 h-full flex flex-col justify-between"
+                        >
+                            <div class="flex justify-between items-start mb-8">
+                                <div
+                                    class="w-12 h-12 bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl flex items-center justify-center text-blue-600 shadow-inner border border-blue-200/50 group-hover:scale-110 transition-transform duration-500"
+                                >
+                                    <Archive class="w-6 h-6" />
+                                </div>
+                                <div class="flex flex-col items-end">
+                                    <span
+                                        class="text-blue-700 bg-blue-50/80 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ring-1 ring-inset ring-blue-600/20 mb-1"
+                                    >
+                                        Hari Ini
+                                    </span>
+                                </div>
+                            </div>
 
-    <div class="group relative rounded-[2rem] bg-white/60 backdrop-blur-xl border border-white/80 shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_8px_40px_rgba(79,70,229,0.12)]">
-        <div class="absolute -inset-20 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-indigo-100/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
-        <div class="absolute -right-10 -bottom-10 w-32 h-32 bg-indigo-400/10 rounded-full blur-2xl group-hover:bg-indigo-400/20 transition-colors duration-700 animate-pulse" style="animation-delay: 200ms;"></div>
-
-        <div class="p-8 relative z-10 h-full flex flex-col justify-between">
-            <div class="flex justify-between items-start mb-8">
-                <div class="w-12 h-12 bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-2xl flex items-center justify-center text-indigo-600 shadow-inner border border-indigo-200/50 group-hover:scale-110 transition-transform duration-500">
-                    <Users class="w-6 h-6" />
-                </div>
-                <div class="flex flex-col items-end">
-                    <span class="text-indigo-700 bg-indigo-50/80 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ring-1 ring-inset ring-indigo-600/20 mb-1">
-                        Sistem
-                    </span>
-                    <span class="text-[10px] font-bold text-slate-400 flex items-center gap-0.5">
-                        Stabil &bull; Aktif
-                    </span>
-                </div>
-            </div>
-            
-            <div>
-                <p class="text-slate-500 font-semibold text-sm mb-1 uppercase tracking-wider text-[11px]">Pengguna Terdaftar</p>
-                <h3 class="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-br from-slate-900 to-slate-600 tracking-tight">
-                    {{ stats.active_users }}
-                </h3>
-            </div>
-        </div>
-    </div>
-
-    <div :class="['group relative rounded-[2rem] overflow-hidden transition-all duration-500 hover:-translate-y-1',
-                  stats.failed_access_today > 0 ? 'bg-gradient-to-b from-rose-950 to-slate-950 border border-rose-900/50 hover:shadow-[0_8px_40px_rgba(225,29,72,0.25)]' : 'bg-gradient-to-b from-slate-900 to-slate-950 border border-slate-800 hover:shadow-[0_8px_40px_rgba(16,185,129,0.15)]']">
-        
-        <div class="absolute inset-0 backdrop-blur-2xl bg-black/10"></div>
-        
-        <div :class="['absolute -right-20 -top-20 w-64 h-64 rounded-full blur-3xl transition-all duration-1000 ease-in-out group-hover:scale-110',
-                      stats.failed_access_today > 0 ? 'bg-rose-600/20' : 'bg-emerald-500/10']"></div>
-        
-        <div class="absolute inset-0 opacity-[0.03]" style="background-image: radial-gradient(white 1px, transparent 1px); background-size: 16px 16px;"></div>
-
-        <div class="p-8 relative z-10 h-full flex flex-col justify-between">
-            <div class="flex justify-between items-start mb-8">
-                <div class="relative">
-                    <div v-if="stats.failed_access_today > 0" class="absolute inset-0 bg-rose-500 rounded-2xl animate-ping opacity-20"></div>
-                    <div :class="['relative w-12 h-12 rounded-2xl flex items-center justify-center text-white border transition-transform duration-500 group-hover:scale-110 shadow-inner',
-                                  stats.failed_access_today > 0 ? 'bg-gradient-to-br from-rose-500/20 to-rose-600/40 border-rose-500/30' : 'bg-gradient-to-br from-white/10 to-white/5 border-white/10']">
-                        <AlertTriangle v-if="stats.failed_access_today > 0" class="w-6 h-6 text-rose-400" />
-                        <Shield v-else class="w-6 h-6 text-emerald-400" />
+                            <div>
+                                <p
+                                    class="text-slate-500 font-semibold text-sm mb-1 uppercase tracking-wider text-[11px]"
+                                >
+                                    Total Paket Masuk
+                                </p>
+                                <h3
+                                    class="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-br from-slate-900 to-slate-600 tracking-tight"
+                                >
+                                    {{ stats.total_packages_today }}
+                                </h3>
+                            </div>
+                        </div>
                     </div>
-                </div>
 
-                <span v-if="stats.failed_access_today === 0" class="text-emerald-400 bg-emerald-400/10 border border-emerald-400/20 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5 backdrop-blur-md">
-                    <CheckCircle2 class="w-3.5 h-3.5" /> Aman
-                </span>
-                <span v-else class="text-rose-400 bg-rose-500/20 border border-rose-400/30 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5 animate-pulse backdrop-blur-md shadow-[0_0_15px_rgba(225,29,72,0.3)]">
-                    <AlertTriangle class="w-3.5 h-3.5" /> Waspada
-                </span>
-            </div>
+                    <div
+                        class="group relative rounded-[2rem] bg-white/60 backdrop-blur-xl border border-white/80 shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_8px_40px_rgba(79,70,229,0.12)]"
+                    >
+                        <div
+                            class="absolute -inset-20 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-indigo-100/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+                        ></div>
+                        <div
+                            class="absolute -right-10 -bottom-10 w-32 h-32 bg-indigo-400/10 rounded-full blur-2xl group-hover:bg-indigo-400/20 transition-colors duration-700 animate-pulse"
+                            style="animation-delay: 200ms"
+                        ></div>
 
-            <div>
-                <p :class="['font-semibold text-sm mb-1 uppercase tracking-wider text-[11px] transition-colors duration-300', 
-                            stats.failed_access_today > 0 ? 'text-rose-300/70 group-hover:text-rose-300' : 'text-slate-400 group-hover:text-emerald-300']">
-                    Akses Gagal Hari Ini
-                </p>
-                <div class="flex items-baseline gap-2">
-                    <h3 class="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-white/60 tracking-tight">
-                        {{ stats.failed_access_today }}
-                    </h3>
-                    <span class="text-sm font-semibold opacity-50 text-white font-sans tracking-normal">Percobaan</span>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+                        <div
+                            class="p-8 relative z-10 h-full flex flex-col justify-between"
+                        >
+                            <div class="flex justify-between items-start mb-8">
+                                <div
+                                    class="w-12 h-12 bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-2xl flex items-center justify-center text-indigo-600 shadow-inner border border-indigo-200/50 group-hover:scale-110 transition-transform duration-500"
+                                >
+                                    <Users class="w-6 h-6" />
+                                </div>
+                                <div class="flex flex-col items-end">
+                                    <span
+                                        class="text-indigo-700 bg-indigo-50/80 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ring-1 ring-inset ring-indigo-600/20 mb-1"
+                                    >
+                                        Sistem
+                                    </span>
+                                    <span
+                                        class="text-[10px] font-bold text-slate-400 flex items-center gap-0.5"
+                                    >
+                                        Stabil &bull; Aktif
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div>
+                                <p
+                                    class="text-slate-500 font-semibold text-sm mb-1 uppercase tracking-wider text-[11px]"
+                                >
+                                    Pengguna Terdaftar
+                                </p>
+                                <h3
+                                    class="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-br from-slate-900 to-slate-600 tracking-tight"
+                                >
+                                    {{ stats.active_users }}
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div
+                        :class="[
+                            'group relative rounded-[2rem] overflow-hidden transition-all duration-500 hover:-translate-y-1',
+                            stats.failed_access_today > 0
+                                ? 'bg-gradient-to-b from-rose-950 to-slate-950 border border-rose-900/50 hover:shadow-[0_8px_40px_rgba(225,29,72,0.25)]'
+                                : 'bg-gradient-to-b from-slate-900 to-slate-950 border border-slate-800 hover:shadow-[0_8px_40px_rgba(16,185,129,0.15)]',
+                        ]"
+                    >
+                        <div
+                            class="absolute inset-0 backdrop-blur-2xl bg-black/10"
+                        ></div>
+
+                        <div
+                            :class="[
+                                'absolute -right-20 -top-20 w-64 h-64 rounded-full blur-3xl transition-all duration-1000 ease-in-out group-hover:scale-110',
+                                stats.failed_access_today > 0
+                                    ? 'bg-rose-600/20'
+                                    : 'bg-emerald-500/10',
+                            ]"
+                        ></div>
+
+                        <div
+                            class="absolute inset-0 opacity-[0.03]"
+                            style="
+                                background-image: radial-gradient(
+                                    white 1px,
+                                    transparent 1px
+                                );
+                                background-size: 16px 16px;
+                            "
+                        ></div>
+
+                        <div
+                            class="p-8 relative z-10 h-full flex flex-col justify-between"
+                        >
+                            <div class="flex justify-between items-start mb-8">
+                                <div class="relative">
+                                    <div
+                                        v-if="stats.failed_access_today > 0"
+                                        class="absolute inset-0 bg-rose-500 rounded-2xl animate-ping opacity-20"
+                                    ></div>
+                                    <div
+                                        :class="[
+                                            'relative w-12 h-12 rounded-2xl flex items-center justify-center text-white border transition-transform duration-500 group-hover:scale-110 shadow-inner',
+                                            stats.failed_access_today > 0
+                                                ? 'bg-gradient-to-br from-rose-500/20 to-rose-600/40 border-rose-500/30'
+                                                : 'bg-gradient-to-br from-white/10 to-white/5 border-white/10',
+                                        ]"
+                                    >
+                                        <AlertTriangle
+                                            v-if="stats.failed_access_today > 0"
+                                            class="w-6 h-6 text-rose-400"
+                                        />
+                                        <Shield
+                                            v-else
+                                            class="w-6 h-6 text-emerald-400"
+                                        />
+                                    </div>
+                                </div>
+
+                                <span
+                                    v-if="stats.failed_access_today === 0"
+                                    class="text-emerald-400 bg-emerald-400/10 border border-emerald-400/20 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5 backdrop-blur-md"
+                                >
+                                    <CheckCircle2 class="w-3.5 h-3.5" /> Aman
+                                </span>
+                                <span
+                                    v-else
+                                    class="text-rose-400 bg-rose-500/20 border border-rose-400/30 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5 animate-pulse backdrop-blur-md shadow-[0_0_15px_rgba(225,29,72,0.3)]"
+                                >
+                                    <AlertTriangle class="w-3.5 h-3.5" />
+                                    Waspada
+                                </span>
+                            </div>
+
+                            <div>
+                                <p
+                                    :class="[
+                                        'font-semibold text-sm mb-1 uppercase tracking-wider text-[11px] transition-colors duration-300',
+                                        stats.failed_access_today > 0
+                                            ? 'text-rose-300/70 group-hover:text-rose-300'
+                                            : 'text-slate-400 group-hover:text-emerald-300',
+                                    ]"
+                                >
+                                    Akses Gagal Hari Ini
+                                </p>
+                                <div class="flex items-baseline gap-2">
+                                    <h3
+                                        class="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-white/60 tracking-tight"
+                                    >
+                                        {{ stats.failed_access_today }}
+                                    </h3>
+                                    <span
+                                        class="text-sm font-semibold opacity-50 text-white font-sans tracking-normal"
+                                        >Percobaan</span
+                                    >
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
 
                 <section>
                     <div class="flex justify-between items-center mb-6">
                         <h2 class="text-xl font-bold text-slate-900">
-                            Status Loker Fisik
+                            Status Kotak Penyimpanan 
                         </h2>
                     </div>
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">

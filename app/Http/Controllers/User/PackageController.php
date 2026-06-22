@@ -389,6 +389,7 @@ class PackageController extends Controller
             'packageInfo' => [
                 'user_id' => $package->user_id,
                 'package_id' => $package->id,
+                'tracking_number' => $package->tracking_number,
                 'transaction_id' => str_pad($package->id, 5, '0', STR_PAD_LEFT) . '-' . $arrivalTime->format('Y'),
                 'status' => 'received',
                 'arrival_time_formatted' => $arrivalTime->translatedFormat('d M Y, H:i') . ' WIB',

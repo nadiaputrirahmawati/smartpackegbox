@@ -258,6 +258,7 @@ const moveToNext = (event, index, type) => {
 const handleUpdatePin = () => {
     // Ganti route('settings.pin.update') menjadi '/settings/pin/update'
     form.post("/user/setting/pin/reset", {
+
         onSuccess: () => {
             form.reset();
             Toast.fire({

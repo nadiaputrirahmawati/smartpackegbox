@@ -59,7 +59,7 @@ const handleShare = () => {
                     >
                     <ChevronRight class="w-4 h-4" />
                     <span class="text-primary font-bold"
-                        >Detail Bukti #{{ packageInfo.transaction_id }}</span
+                        >Detail Bukti #{{ packageInfo.tracking_number }}</span
                     >
                 </div>
 
@@ -166,7 +166,7 @@ const handleShare = () => {
                                         Nomer Resi
                                     </p>
                                     <p class="text-lg font-semibold">
-                                        {{ packageInfo.transaction_id }}
+                                        {{ packageInfo.tracking_number }}
                                     </p>
                                 </div>
 
@@ -203,7 +203,7 @@ const handleShare = () => {
                                 <div>
                                     <Link
                                         :href="`/user/packages/${packageInfo.package_id}`"
-                                        class="bg-tertiary-600 hover:bg-secondary-400 flex items-center justify-center space-x-2 px-6 py-3 rounded-2xl text-md font-semibold text-primary hover:text-white transition-colors shadow-md"
+                                        class="bg-tertiary-600 hover:bg-secondary-400 flex items-center justify-center space-x-2 px-6 py-3 rounded-2xl text-md font-semibold text-primary hover:text-primary  transition-colors shadow-md"
                                         title="Detail Paket"
                                     >
                                         <Banknote />
